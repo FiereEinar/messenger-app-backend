@@ -6,22 +6,24 @@ const app = express();
 app.use(cors());
 
 //controllers
+const authRouter = require('./routes/auth');
 
 // connect to mongoDB
-// const mongoose = require('mongoose');
-// mongoose.set('strictQuery', false);
-// const mongoDB = process.env.MONGO_URI;
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
+const mongoDB = process.env.MONGO_URI;
 
-// main().catch((err) => console.log(err));
-// async function main() {
-//   await mongoose.connect(mongoDB);
-// }
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // routes
+app.use('/auth', authRouter);
 
 // Error handlers
 app.use((req, res, next) => {
