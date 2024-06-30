@@ -33,7 +33,7 @@ exports.login_post = asyncHandler(async (req, res) => {
   // generate a token
   const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
 
-  return res.json(new Response(true, { token }, 'Login in successfull', null));
+  return res.json(new Response(true, { token, userID: user._id }, 'Login in successfull', null));
 });
 
 /**
@@ -41,6 +41,8 @@ exports.login_post = asyncHandler(async (req, res) => {
  */
 exports.signup_post = asyncHandler(async (req, res) => {
   const { username, password, firstname, lastname } = req.body;
+  const defaultImgURL = 'https://res.cloudinary.com/dkidfx99m/image/upload/v1719707237/uiotniwyo7xalhdurrf9.webp';
+  const defaultImgID = 'zioyniwyo9xalhduarf1';
 
   // check for body validation errors
   const errors = validationResult(req);
@@ -65,10 +67,18 @@ exports.signup_post = asyncHandler(async (req, res) => {
     firstname: firstname,
     lastname: lastname,
     username: username,
-    password: hashedPassword
+    password: hashedPassword,
+    profile: {
+      url: defaultImgURL,
+      publicID: defaultImgID,
+    }
   });
 
   await user.save()
 
   return res.json(new Response(true, user, 'Signup in successfull', null));
 });
+
+exports.test_route = async (req, res) => {
+  return res.json(new Response(true, result, 'updated', null));
+};

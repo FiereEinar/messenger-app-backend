@@ -19,7 +19,7 @@ exports.signup_validation = [
 
 ];
 
-exports.signup_validation = [
+exports.login_validation = [
   body('username', 'Username must not be empty')
     .trim()
     .isLength({ min: 1 }),
@@ -29,3 +29,9 @@ exports.signup_validation = [
     .isLength({ min: 1 }),
 
 ];
+
+exports.message_post_validation = [
+  body('message', 'Message must not be empty')
+    .trim()
+    .isLength({ min: 1 }),
+]

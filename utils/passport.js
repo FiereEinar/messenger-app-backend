@@ -20,7 +20,7 @@ passport.use(new JwtStrategy(
         return done(null, false);
       }
 
-      const match = user.password === jwt_payload.user.passport;
+      const match = user.password === jwt_payload.user.password;
       if (!match) {
         return done(null, false);
       }
@@ -32,4 +32,8 @@ passport.use(new JwtStrategy(
   })
 );
 
-module.exports = passport;
+exports.passport = passport;
+exports.jwt_authenticate = (req, res, next) => {
+  passport.authenticate('jwt', { session: false });
+  next();
+};
