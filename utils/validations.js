@@ -31,7 +31,6 @@ exports.login_validation = [
 ];
 
 exports.message_post_validation = [
-  body('message', 'Message must not be empty')
-    .trim()
-    .isLength({ min: 1 }),
+  body('message')
+    .trim(),
 ]

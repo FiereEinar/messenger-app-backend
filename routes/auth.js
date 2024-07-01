@@ -8,7 +8,6 @@ const {
 } = require('../controllers/authController');
 const { signup_validation, login_validation } = require('../utils/validations');
 
-// order: authenticate, upload, validate, 
 router.post('/login', login_validation, login_post);
 router.post('/signup', signup_validation, signup_post);
 router.get('/test', test_route);
