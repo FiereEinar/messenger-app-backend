@@ -34,3 +34,18 @@ exports.message_post_validation = [
   body('message')
     .trim(),
 ]
+
+exports.user_update_validation = [
+  body('username', 'Username must not be empty')
+    .trim()
+    .isLength({ min: 1 }),
+
+  body('firstname', 'First name must not be empty')
+    .trim()
+    .isLength({ min: 1 }),
+
+  body('lastname', 'Last name must not be empty')
+    .trim()
+    .isLength({ min: 1 }),
+
+]
