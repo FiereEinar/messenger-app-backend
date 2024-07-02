@@ -48,4 +48,19 @@ exports.user_update_validation = [
     .trim()
     .isLength({ min: 1 }),
 
-]
+];
+
+exports.change_password_validation = [
+  body('oldPassword', 'Password must be atleast 5 characters')
+    .trim()
+    .isLength({ min: 5 }),
+
+  body('newPassword', 'Password must be atleast 5 characters')
+    .trim()
+    .isLength({ min: 5 }),
+
+  body('confirmNewPassword', 'Password must be atleast 5 characters')
+    .trim()
+    .isLength({ min: 5 }),
+
+];

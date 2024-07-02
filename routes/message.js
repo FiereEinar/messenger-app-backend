@@ -10,8 +10,21 @@ const {
 } = require('../controllers/messageController');
 const { message_post_validation } = require('../utils/validations');
 
-router.get('/:senderID/:receiverID', passport.authenticate('jwt', { session: false }), message_get);
-router.post('/:senderID/:receiverID', passport.authenticate('jwt', { session: false }), upload.single('image'), message_post_validation, message_post);
-router.delete('/:messageID', passport.authenticate('jwt', { session: false }), message_delete);
+router.get('/:senderID/:receiverID',
+  passport.authenticate('jwt', { session: false }),
+  message_get
+);
+
+router.post('/:senderID/:receiverID',
+  passport.authenticate('jwt', { session: false }),
+  upload.single('image'),
+  message_post_validation,
+  message_post
+);
+
+router.delete('/:messageID',
+  passport.authenticate('jwt', { session: false }),
+  message_delete
+);
 
 module.exports = router;
