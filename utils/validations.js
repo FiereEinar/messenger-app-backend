@@ -64,3 +64,9 @@ exports.change_password_validation = [
     .isLength({ min: 5 }),
 
 ];
+
+exports.create_group_validation = [
+  body('name', 'Group name must be atleast 3 characters')
+    .trim()
+    .isLength({ min: 3 }),
+];

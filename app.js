@@ -9,6 +9,7 @@ app.use(cors());
 const authRouter = require('./routes/auth');
 const messageRouter = require('./routes/message');
 const userRouter = require('./routes/user');
+const groupRouter = require('./routes/group');
 
 // connect to mongoDB
 const mongoose = require('mongoose');
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
+app.use('/group', groupRouter);
 
 // Error handlers
 app.use((req, res, next) => {
