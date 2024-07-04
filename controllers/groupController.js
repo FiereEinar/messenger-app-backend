@@ -12,7 +12,10 @@ const fs = require('fs/promises');
  */
 exports.user_groups_get = asyncHandler(async (req, res) => {
   const { userID } = req.params;
-  const userGroups = await Group.find({ members: userID })
+  const globalChatID = '6686265df39e586794515b27';
+
+  // exclude the global chat
+  const userGroups = await Group.find({ members: userID, _id: { $ne: globalChatID } })
 
   return res.json(new Response(true, userGroups, 'User groups gathered', null));
 });

@@ -7,6 +7,7 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const fs = require('fs/promises');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 /**
  * GET - ALL USERS
@@ -153,5 +154,7 @@ exports.user_password_update = asyncHandler(async (req, res) => {
 
   const result = await User.findByIdAndUpdate(userID, update, { new: true }).exec();
 
-  return res.json(new Response(true, result, 'Password updated', null));
+  const token = jwt.sign({ result }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+
+  return res.json(new Response(true, { result, token }, 'Password updated', null));
 });
