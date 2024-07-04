@@ -8,6 +8,7 @@ const {
   group_post,
   group_chats_get,
   group_chat_post,
+  group_info_get,
 } = require('../controllers/groupController');
 const { create_group_validation, message_post_validation } = require('../utils/validations');
 
@@ -26,6 +27,11 @@ router.get('/:userID',
 router.get('/:groupID/chats',
   passport.authenticate('jwt', { session: false }),
   group_chats_get
+);
+
+router.get('/:groupID/info',
+  passport.authenticate('jwt', { session: false }),
+  group_info_get
 );
 
 router.post('/chats/:senderID/:groupID',

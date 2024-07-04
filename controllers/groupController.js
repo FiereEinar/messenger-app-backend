@@ -111,3 +111,21 @@ exports.group_chat_post = asyncHandler(async (req, res) => {
 
   return res.json(new Response(true, newMessage, 'Message sent to goup', null));
 });
+
+
+exports.group_info_get = asyncHandler(async (req, res) => {
+  const { groupID } = req.params;
+
+  const group = await Group.findById(groupID)
+    .populate({
+      path: 'members',
+      select: '-password'
+    })
+    .populate({
+      path: 'admins',
+      select: '-password'
+    })
+    .exec();
+
+  return res.json(new Response(true, group, 'Message info retrieved', null));
+});
