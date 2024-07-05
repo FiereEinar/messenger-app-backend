@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const cloudinary = require('../utils/cloudinary');
 const fs = require('fs/promises');
+const uploadImage = require('../utils/uploader');
 
 /**
  * GET - MESSAGES FROM SENDER TO RECEIVER
@@ -41,12 +42,10 @@ exports.message_post = asyncHandler(async (req, res) => {
   let imgPublicID = '';
 
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await uploadImage(req.file);
 
     imgURL = result.secure_url;
     imgPublicID = result.public_id;
-
-    await fs.unlink(req.file.path);
   }
 
   const newMessage = new Message({

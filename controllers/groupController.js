@@ -6,6 +6,7 @@ const Message = require('../models/message');
 const Group = require('../models/group');
 const cloudinary = require('../utils/cloudinary');
 const fs = require('fs/promises');
+const uploadImage = require('../utils/uploader');
 
 /**
  * GET - USER'S GROUPs
@@ -37,12 +38,10 @@ exports.group_post = asyncHandler(async (req, res) => {
   let profilePublicID = '';
 
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await uploadImage(req.file);
 
     profileURL = result.secure_url;
     profilePublicID = result.public_id;
-
-    await fs.unlink(req.file.path);
   }
 
   const group = new Group({
@@ -92,12 +91,10 @@ exports.group_chat_post = asyncHandler(async (req, res) => {
   let imgPublicID = '';
 
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await uploadImage(req.file);
 
     imgURL = result.secure_url;
     imgPublicID = result.public_id;
-
-    await fs.unlink(req.file.path);
   }
 
   const newMessage = new Message({

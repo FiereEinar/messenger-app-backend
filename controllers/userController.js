@@ -1,13 +1,13 @@
 require('dotenv').config();
 const asyncHandler = require('express-async-handler');
 const Response = require('../models/response');
-const { validationResult } = require("express-validator");
 const cloudinary = require('../utils/cloudinary');
 const User = require('../models/user');
 const Message = require('../models/message');
 const fs = require('fs/promises');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uploadImage = require('../utils/uploader');
 
 /**
  * GET - ALL USERS
@@ -53,7 +53,8 @@ exports.user_update = asyncHandler(async (req, res) => {
 
   // if there is an uploaded image, update the user profile
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    // upload using file buffer
+    const result = await uploadImage(req.file);
 
     profileURL = result.secure_url;
     profilePublicID = result.public_id;
@@ -62,8 +63,6 @@ exports.user_update = asyncHandler(async (req, res) => {
     if (user.profile.publicID.length > 0) {
       await cloudinary.uploader.destroy(user.profile.publicID);
     }
-
-    await fs.unlink(req.file.path);
   }
 
   const update = {
@@ -97,19 +96,17 @@ exports.user_cover_update = asyncHandler(async (req, res) => {
   let coverURL = user.cover.url;
   let coverPublicID = user.cover.publicID;
 
-  // if there is an uploaded image, update the user cover
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    // upload using file buffer
+    const result = await uploadImage(req.file);
 
     coverURL = result.secure_url;
     coverPublicID = result.public_id;
 
     // if there was a previous cover, delete that from the cloud
-    if (user.cover.publicID.length > 0) {
+    if (user.cover.publicID) {
       await cloudinary.uploader.destroy(user.cover.publicID);
     }
-
-    await fs.unlink(req.file.path);
   }
 
   const update = {
