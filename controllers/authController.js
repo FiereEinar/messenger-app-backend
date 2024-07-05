@@ -71,6 +71,10 @@ exports.signup_post = asyncHandler(async (req, res) => {
     profile: {
       url: defaultImgURL,
       publicID: defaultImgID,
+    },
+    cover: {
+      url: '',
+      publicID: '',
     }
   });
 

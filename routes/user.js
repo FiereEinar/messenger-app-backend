@@ -13,7 +13,7 @@ const {
 } = require('../controllers/userController');
 
 router.get('/',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   users_get
 );
 

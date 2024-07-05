@@ -25,12 +25,12 @@ router.get('/:userID',
 );
 
 router.get('/:groupID/chats',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   group_chats_get
 );
 
 router.get('/:groupID/info',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   group_info_get
 );
 
