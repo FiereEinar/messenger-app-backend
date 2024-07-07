@@ -7,6 +7,7 @@ const UserSchema = new Schema({
   lastname: { type: String, minLength: 1, required: true },
   username: { type: String, minLength: 1, required: true, unique: true },
   password: { type: String, minLength: 1, required: true },
+  isOnline: { type: Boolean, default: false },
   bio: { type: String, default: '' },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   dateJoined: { type: Date, default: Date.now },

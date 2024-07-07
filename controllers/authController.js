@@ -84,5 +84,7 @@ exports.signup_post = asyncHandler(async (req, res) => {
 });
 
 exports.test_route = async (req, res) => {
-  return res.json(new Response(true, null, 'updated', null));
+  const result = await User.updateMany({}, { isOnline: false });
+
+  return res.json(new Response(true, result, 'updated', null));
 };

@@ -9,7 +9,8 @@ const {
   user_info_get,
   user_update,
   user_cover_update,
-  user_password_update
+  user_password_update,
+  user_status_put,
 } = require('../controllers/userController');
 
 router.get('/',
@@ -32,6 +33,11 @@ router.put('/:userID/password',
   passport.authenticate('jwt', { session: false }),
   change_password_validation,
   user_password_update
+);
+
+router.put('/:userID/status',
+  passport.authenticate('jwt', { session: false }),
+  user_status_put
 );
 
 router.put('/:userID',

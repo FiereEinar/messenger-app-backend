@@ -121,6 +121,9 @@ exports.user_cover_update = asyncHandler(async (req, res) => {
   return res.json(new Response(true, updatedUser, 'User cover photo updated', null));
 });
 
+/**
+ * PUT - UPDATE USER PASSWORD
+ */
 exports.user_password_update = asyncHandler(async (req, res) => {
   const { userID } = req.params;
   const { oldPassword, newPassword, confirmNewPassword } = req.body;
@@ -154,4 +157,16 @@ exports.user_password_update = asyncHandler(async (req, res) => {
   const token = jwt.sign({ result }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
 
   return res.json(new Response(true, { result, token }, 'Password updated', null));
+});
+
+/**
+ * PUT - UPDATE USER STATUS
+ */
+exports.user_status_put = asyncHandler(async (req, res) => {
+  const { userID } = req.params;
+  const { status } = req.body;
+
+  const result = await User.findByIdAndUpdate(userID, { isOnline: status }, { new: true }).exec();
+  console.log('Updated user status', result)
+  return res.json(new Response(true, result, 'User status updated', null));
 });
