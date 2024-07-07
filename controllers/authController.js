@@ -31,7 +31,7 @@ exports.login_post = asyncHandler(async (req, res) => {
   }
 
   // generate a token
-  const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+  const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY);
 
   return res.json(new Response(true, { token, userID: user._id }, 'Login in successfull', null));
 });
@@ -84,7 +84,6 @@ exports.signup_post = asyncHandler(async (req, res) => {
 });
 
 exports.test_route = async (req, res) => {
-  const result = await User.updateMany({}, { isOnline: false });
 
   return res.json(new Response(true, result, 'updated', null));
 };
