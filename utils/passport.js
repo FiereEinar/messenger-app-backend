@@ -14,14 +14,11 @@ passport.use(new JwtStrategy(
   opts,
   async (jwt_payload, done) => {
     try {
-      const user = await User.findById(jwt_payload.user._id);
+      console.log('jwt: ', jwt_payload)
+      const user = await User.findById(jwt_payload.id);
+      console.log('user: ', user)
 
       if (!user) {
-        return done(null, false);
-      }
-
-      const match = user.password === jwt_payload.user.password;
-      if (!match) {
         return done(null, false);
       }
 

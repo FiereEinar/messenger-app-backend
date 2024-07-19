@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(cors({
-  origin: 'https://messenger-app-blond.vercel.app'
+  // origin: 'https://messenger-app-blond.vercel.app'
 }));
 
 //controllers
@@ -26,6 +27,7 @@ async function main() {
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // routes
 app.use('/auth', authRouter);
