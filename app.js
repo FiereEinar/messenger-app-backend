@@ -3,9 +3,16 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
+const FRONTEND_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://messenger-app-blond.vercel.app'
+    : 'http://localhost:5173';
+
 const app = express();
+
 app.use(cors({
-  // origin: 'https://messenger-app-blond.vercel.app'
+  credentials: true,
+  origin: FRONTEND_URL
 }));
 
 //controllers

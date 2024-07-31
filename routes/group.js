@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../utils/passport');
 const upload = require('../utils/multer');
+const auth = require('../middlewares/auth')
 
 const {
   user_groups_get,
@@ -13,29 +13,29 @@ const {
 const { create_group_validation, message_post_validation } = require('../utils/validations');
 
 router.post('/',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   upload.single('groupProfile'),
   create_group_validation,
   group_post
 );
 
 router.get('/:userID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   user_groups_get
 );
 
 router.get('/:groupID/chats',
-  // passport.authenticate('jwt', { session: false }),
+  // auth,
   group_chats_get
 );
 
 router.get('/:groupID/info',
-  // passport.authenticate('jwt', { session: false }),
+  // auth,
   group_info_get
 );
 
 router.post('/chats/:senderID/:groupID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   upload.single('image'),
   message_post_validation,
   group_chat_post

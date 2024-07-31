@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../utils/passport');
 const upload = require('../utils/multer');
 const { change_password_validation } = require('../utils/validations');
+const auth = require('../middlewares/auth')
 
 const {
   users_get,
@@ -14,34 +14,34 @@ const {
 } = require('../controllers/userController');
 
 router.get('/',
-  // passport.authenticate('jwt', { session: false }),
+  // auth,
   users_get
 );
 
 router.get('/:userID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   user_info_get
 );
 
 router.put('/:userID/cover',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   upload.single('coverPhoto'),
   user_cover_update
 );
 
 router.put('/:userID/password',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   change_password_validation,
   user_password_update
 );
 
 router.put('/:userID/status',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   user_status_put
 );
 
 router.put('/:userID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   upload.single('profileImg'),
   user_update
 );
