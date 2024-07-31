@@ -167,6 +167,6 @@ exports.user_status_put = asyncHandler(async (req, res) => {
   const { status } = req.body;
 
   const result = await User.findByIdAndUpdate(userID, { isOnline: status }, { new: true }).exec();
-  console.log('Updated user status', result)
+
   return res.json(new Response(true, result, 'User status updated', null));
 });

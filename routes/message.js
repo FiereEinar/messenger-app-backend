@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../utils/passport');
 const upload = require('../utils/multer');
+const auth = require('../middlewares/auth')
 
 const {
   message_get,
@@ -11,19 +11,19 @@ const {
 const { message_post_validation } = require('../utils/validations');
 
 router.get('/:senderID/:receiverID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   message_get
 );
 
 router.post('/:senderID/:receiverID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   upload.single('image'),
   message_post_validation,
   message_post
 );
 
 router.delete('/:messageID',
-  passport.authenticate('jwt', { session: false }),
+  auth,
   message_delete
 );
 

@@ -30,10 +30,33 @@ exports.login_post = asyncHandler(async (req, res) => {
     return res.json(new Response(false, null, 'Invalid password', null));
   }
 
-  // generate a token
-  const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY);
+  // generate tokens
+  const accessToken = jwt.sign(
+    { id: user._id, username: user.username },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: '1d' }
+  );
 
-  return res.json(new Response(true, { token, userID: user._id }, 'Login in successfull', null));
+  const refreshToken = jwt.sign(
+    { id: user._id, username: user.username },
+    process.env.JWT_REFRESH_KEY,
+    { expiresIn: '1d' }
+  );
+
+  // save the refresh token in the user
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  // send the refreshToken in a cookie
+  res.cookie('jwt', refreshToken, {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000   // 1 day
+  });
+
+  // send the accessToken in the response
+  res.json(new Response(true, { token: accessToken, userID: user._id }, 'Login in successfull', null));
 });
 
 /**
@@ -83,7 +106,78 @@ exports.signup_post = asyncHandler(async (req, res) => {
   return res.json(new Response(true, user, 'Signup in successfull', null));
 });
 
+/**
+ * GET - REFRESH TOKEN
+ */
+exports.refresh_token = asyncHandler(async (req, res) => {
+  const cookies = req.cookies;
+
+  // no cookies
+  if (!cookies?.jwt) return res.sendStatus(401);
+
+  const refreshToken = cookies.jwt;
+
+  // find the user that has this refresh token
+  const user = await User.findOne({ refreshToken: refreshToken })
+  if (!user) {
+    return res.sendStatus(403);
+  }
+
+  // verify the refreshToken
+  const result = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY)
+  if (!result || result.username !== user.username) {
+    return res.sendStatus(403);
+  }
+
+  // if all is well, generate access token
+  const accessToken = jwt.sign(
+    { id: user._id, username: user.username },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: '30s' }
+  );
+
+  // send the accessToken in the response
+  res.json(new Response(true, { token: accessToken, userID: user._id }, 'Token refresh successfull', null));
+});
+
+/**
+ * GET - LOGOUT
+ */
+exports.logout = asyncHandler(async (req, res) => {
+  const cookies = req.cookies;
+
+  // no cookies
+  if (!cookies?.jwt) return res.sendStatus(204);
+
+  const refreshToken = cookies.jwt;
+
+  // find the user that has this refresh token
+  const user = await User.findOne({ refreshToken: refreshToken })
+  if (!user) {
+    // clear the cookie
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+    });
+
+    return res.sendStatus(204);
+  }
+
+  user.refreshToken = '';
+  await user.save();
+
+  // clear the cookie
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+  });
+  res.sendStatus(204);
+});
+
 exports.test_route = async (req, res) => {
+  const result = await User.updateMany({}, { isOnline: false }).exec();
 
   return res.json(new Response(true, result, 'updated', null));
 };
