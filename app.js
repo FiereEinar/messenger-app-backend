@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
 const FRONTEND_URL =
@@ -10,9 +11,10 @@ const FRONTEND_URL =
 
 const app = express();
 
+app.use(helmet());
 app.use(cors({
+  origin: FRONTEND_URL,
   credentials: true,
-  origin: FRONTEND_URL
 }));
 
 //controllers
