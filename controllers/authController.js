@@ -176,8 +176,26 @@ exports.logout = asyncHandler(async (req, res) => {
   res.sendStatus(204);
 });
 
+exports.check_auth = asyncHandler(async (req, res) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) return res.sendStatus(401);
+
+  const token = req.cookies.jwt;
+
+  const user = await User.findOne({ refreshToken: token }).exec();
+
+  if (!user) return res.sendStatus(403);
+
+  jwt.verify(token, process.env.JWT_REFRESH_KEY, (err, data) => {
+    if (err) return res.sendStatus(403);
+    return res.sendStatus(202);
+  });
+});
+
 exports.test_route = async (req, res) => {
   const result = await User.updateMany({}, { isOnline: false }).exec();
 
   return res.json(new Response(true, result, 'updated', null));
 };
+

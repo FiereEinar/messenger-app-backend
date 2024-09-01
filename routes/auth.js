@@ -6,7 +6,8 @@ const {
   signup_post,
   test_route,
   refresh_token,
-  logout
+  logout,
+  check_auth
 } = require('../controllers/authController');
 const { signup_validation, login_validation } = require('../utils/validations');
 
@@ -26,6 +27,10 @@ router.get('/refresh',
 
 router.get('/logout',
   logout
+);
+
+router.get('/check',
+  check_auth
 );
 
 router.get('/test',
